@@ -3,6 +3,7 @@ import numpy as np
 
 import time
 import re
+import os
 
 from lxml.etree import tostring
 from bs4 import BeautifulSoup

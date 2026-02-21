@@ -90,7 +90,7 @@ def run_update():
             if os.path.exists(file_path):
                 os.remove(file_path)
                 log(f"Removed existing file: {file_path}")
-            func(df, title=filename.replace(".html",""), path=PLOTS_FOLDER, **kwargs)
+            func(df, title=filename.replace(".html",""), path=plots_folder, **kwargs)
             log(f"Saved new plot: {file_path}")
 
         log("All plots and tables saved successfully.")
