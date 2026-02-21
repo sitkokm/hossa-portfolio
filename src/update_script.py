@@ -22,12 +22,11 @@ dr = config.hossa_col['dark_red']
 log_file = config.log_file
 
 def log(msg):
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    line = f"[{timestamp}] {msg}"
     with open(log_file, "a") as f:
-        f.write(line + "\n")
-    print(line)
-
+        f.write(f"[{timestamp}] {msg}\n")
+    print(f"[{timestamp}] {msg}")
 
 def run_update():
     log("=== Starting daily update ===")
