@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
 import src.utils as u
+import src.colors as c
 import os
 
 def table2html(df: pd.DataFrame, title="table", fontsize=14, link=None, path=""):
@@ -380,6 +381,7 @@ def donut(df, val_col, label_col, colors=None, title=None, fontsize=12, path = "
     )
     print(f"Saved new plot: {full_path}")
 
+
 def horizontal_bars(df, val_col, label_col, colors=None, 
                               title=None, xlabel=None, fontsize=10, path = ""):
     df[val_col] = u.str2float(df[val_col])
@@ -389,6 +391,8 @@ def horizontal_bars(df, val_col, label_col, colors=None,
 
     if colors is None:
         colors = ["gray"] * n
+
+    colors = c.positive_negative_colors(colors, values)
 
     fig = go.Figure()
 
@@ -428,7 +432,7 @@ def horizontal_bars(df, val_col, label_col, colors=None,
         annotations=annotations,
         font=dict(family='Arial', size=fontsize, color='black'),
         xaxis=dict(
-            # title=xlabel,
+            title=xlabel,
             showgrid=True,
             gridcolor='lightgray',
             zeroline=True,

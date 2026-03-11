@@ -27,7 +27,8 @@ This repository generates simple interactive HTML plots and tables for a portfol
 
 ## Requirements and installation
 
-### 1. Recommended Python: 3.11 (but 12, 13 should be fine). 
+### 1. Recommended Python: 3.11 (but 12, 13 should be fine).
+    git clone https://github.com/sitkokm/hossa-portfolio
 ### 2. Setting up environment and installing dependencies:
 
 #### Option A — Conda (especially for JupyterLab)
