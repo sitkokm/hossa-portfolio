@@ -1,8 +1,11 @@
 import os
 import datetime
 import pandas as pd
-from src.utils import scrapeDataFromSpreadsheet, generate_colors
+
+from src.utils import scrapeDataFromSpreadsheet
 import src.plots as plots
+import src.colors as c
+
 import traceback
 
 PLOTS_FOLDER = "/home/srv73139/domains/hossaprocapital.pl/public_html/wp-content/uploads/plots"
@@ -52,7 +55,7 @@ def run_update():
         fontsize = 13
         colors_list = [dr, lg, dg]
 
-        colors, cmap, norm = generate_colors(df_stopa, val_col, colors_list)
+        colors, cmap, norm = c.generate_colors(df_stopa, val_col, colors_list)
         plots.horizontal_bars(df_stopa, val_col, label_col, colors=[dr, dg], 
                               title=title, xlabel=val_col, fontsize=fontsize, path=PLOTS_FOLDER)
 
@@ -62,7 +65,7 @@ def run_update():
         label_col = "Nazwa"
         fontsize = 11
         colors_list = ['#ddeedd', '#224422']
-        colors, cmap, norm = generate_colors(df_stopa, val_col, colors_list, to_hex=True)
+        colors, cmap, norm = c.generate_colors(df_stopa, val_col, colors_list, to_hex=True)
         
         path_donut = os.path.join(PLOTS_FOLDER, f"{title}.html")
         
