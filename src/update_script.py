@@ -5,29 +5,26 @@ import pandas as pd
 from src.utils import scrapeDataFromSpreadsheet
 import src.plots as plots
 import src.colors as c
+import config
 
 import traceback
 
-PLOTS_FOLDER = "/home/srv73139/domains/hossaprocapital.pl/public_html/wp-content/uploads/plots"
-os.makedirs(PLOTS_FOLDER, exist_ok=True)
+wp_folder = config.WP_FOLDER
+plots_folder = config.PLOTS_FOLDER
+log_file = config.LOG_FILE
+
+gids = config.GIDS
+
+dg = config.HOSSA_COL['dark_green']
+lg = config.HOSSA_COL['light_green']
+dr = config.HOSSA_COL['dark_red']
 
 sheetId = os.environ.get("sheetId")
 if not sheetId:
     raise ValueError("Environment variable sheetId not set!")
 
-gids = {
-    "tab": '1931120804',
-    "stopa": '1275807278',
-    "sums": '254781248',
-    "wyceny": '1005345820',
-    "wig": '1164349481'
-}
-
-dg = "#304536"
-lg = '#5D6C61'
-dr = '#852029'
-
-log_file = "log/log.txt"
+output_path = os.path.join(wp_folder, plots_folder)
+os.makedirs(output_path, exist_ok=True)
 
 def log(msg):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -57,7 +54,7 @@ def run_update():
 
         colors, cmap, norm = c.generate_colors(df_stopa, val_col, colors_list)
         plots.horizontal_bars(df_stopa, val_col, label_col, colors=[dr, dg], 
-                              title=title, xlabel=val_col, fontsize=fontsize, path=PLOTS_FOLDER)
+                              title=title, xlabel=val_col, fontsize=fontsize, path=output_path)
 
         # --- Donut plot ---
         title = "udzial"
@@ -67,23 +64,23 @@ def run_update():
         colors_list = ['#ddeedd', '#224422']
         colors, cmap, norm = c.generate_colors(df_stopa, val_col, colors_list, to_hex=True)
         
-        path_donut = os.path.join(PLOTS_FOLDER, f"{title}.html")
+        path_donut = os.path.join(output_path, f"{title}.html")
         
         if os.path.exists(path_donut):
             os.remove(path_donut)
             log(f"Removed existing file: {path_donut}")
             
-        plots.donut(df_stopa, val_col, label_col, colors, title=title, fontsize=fontsize, path=PLOTS_FOLDER)
+        plots.donut(df_stopa, val_col, label_col, colors, title=title, fontsize=fontsize, path=output_path)
         log(f"Saved new plot: {path_donut}")
 
         # --- Portfolio vs WIG plot ---
         title = "portfolio_vs_wig"
-        path_wig = os.path.join(PLOTS_FOLDER, f"{title}.html")
+        path_wig = os.path.join(output_path, f"{title}.html")
         fontsize = 17
         if os.path.exists(path_wig):
             os.remove(path_wig)
             log(f"Removed existing file: {path_wig}")
-        plots.portfolio_vs_wig(df_wig, title=title, fontsize=fontsize, height=450, path=PLOTS_FOLDER)
+        plots.portfolio_vs_wig(df_wig, title=title, fontsize=fontsize, height=450, path=output_path)
         log(f"Saved new plot: {path_wig}")
 
         # --- Tables ---
@@ -96,11 +93,11 @@ def run_update():
         ]
 
         for filename, func, df, kwargs in table_files:
-            file_path = os.path.join(PLOTS_FOLDER, filename)
+            file_path = os.path.join(output_path, filename)
             if os.path.exists(file_path):
                 os.remove(file_path)
                 log(f"Removed existing file: {file_path}")
-            func(df, title=filename.replace(".html",""), path=PLOTS_FOLDER, **kwargs)
+            func(df, title=filename.replace(".html",""), path=output_path, **kwargs)
             log(f"Saved new plot: {file_path}")
 
         log("All plots and tables saved successfully.")
