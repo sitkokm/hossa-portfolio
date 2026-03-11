@@ -18,7 +18,8 @@ This repository generates simple interactive HTML plots and tables for a portfol
 ├── passenger_wsgi.py    # only needed in our hosting environment
 ├── src/
 │   ├── update_script.py # main script that scrapes the sheet and generates plots
-│   ├── utils.py         # helper functions: scraping, color generation, string → float conversion
+│   ├── utils.py         # helper functions: scraping, string → float conversion
+│   ├── colors.py        # utils that generates color palettes etc. for plots
 │   └── plots.py         # functions that generate HTML plots/tables
 ├── plots/               # created at runtime - stores generated HTML files
 └── log/
@@ -78,7 +79,8 @@ python load_env.py
 ## How to run the update locally
 
 1. Ensure dependencies installed and `.env` is set up (sheetId present).
-2. From the project root run the update directly:
+2. Check config.py and choose paths for saving plots etc.
+3. From the project root run the update directly:
    python src/update_script.py
 This will:
 - Fetch data from Google Sheets,
