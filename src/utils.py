@@ -23,6 +23,7 @@ def str2float(series: pd.Series) -> pd.Series: # df[col] = str2float(df[col])
 def scrapeDfFromSpreadsheet(sheetId, gid):
     url = f"https://docs.google.com/spreadsheets/d/{sheetId}/export?format=csv&gid={gid}"
     df = pd.read_csv(url)
+    df = df.fillna("")
     return df
 
 def scrapeDataFromSpreadsheet(sheetId, gid, headers = True) -> pd.DataFrame:
