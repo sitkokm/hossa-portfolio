@@ -49,16 +49,17 @@ def positive_negative_colors(colors, values):
     new_colors = []
     for v in values:
         if v < 0:
-            # teraz: min → neg_color (ciemny), 0 → neg_light (jasny)
-            t = (v - min_val) / (0 - min_val) if min_val != 0 else 1
-            t = 1 - t  # ODWRÓCENIE GRADIENTU
-            new_colors.append(interpolate_color(neg_color, neg_light, t))
+            if min_val != 0:
+                t = v / min_val  
+            else:
+                t = 1
+            new_colors.append(interpolate_color(neg_light, neg_color, t))
         else:
-            # teraz: 0 → pos_light (jasny), max → pos_color (ciemny)
             t = v / max_val if max_val != 0 else 1
-            t = 1 - t  # ODWRÓCENIE GRADIENTU
+            t = 1 - t
             new_colors.append(interpolate_color(pos_color, pos_light, t))
     return new_colors
+
 
 def generate_colors(df: pd.DataFrame, col_name: str, colors_list=['#a6a6a6', '#304536'], to_hex = True):
     """

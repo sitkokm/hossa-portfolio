@@ -241,11 +241,10 @@ def portfolio_vs_wig(df: pd.DataFrame, title="portfolio_vs_wig", fontsize=17, he
             df[col] = u.str2float(df[col])
     df["Data"] = pd.to_datetime(df["Data"], errors="coerce")
     df = df.dropna()
-    print(df)
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=df["Data"], y=df.iloc[:, 1],
+        x=df["Data"], y=df["Stopa zwrotu portfela"],
         mode="lines",
         name=df.columns[1],
         line=dict(color="#304536", width=2),

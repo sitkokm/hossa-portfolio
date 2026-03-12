@@ -20,6 +20,11 @@ def str2float(series: pd.Series) -> pd.Series: # df[col] = str2float(df[col])
         .pipe(pd.to_numeric, errors="coerce")
     )
 
+def scrapeDfFromSpreadsheet(sheetId, gid):
+    url = f"https://docs.google.com/spreadsheets/d/{sheetId}/export?format=csv&gid={gid}"
+    df = pd.read_csv(url)
+    return df
+
 def scrapeDataFromSpreadsheet(sheetId, gid, headers = True) -> pd.DataFrame:
     url = f'https://docs.google.com/spreadsheets/u/0/d/{sheetId}/gviz/tq?tqx=out:html&tq=&gid={gid}'
     html = requests.get(url).text

@@ -8,9 +8,9 @@ GIDS = {
     "wig": '1164349481'
 }
 
-
 PLOTS_FOLDER = "plots"
 LOG_FILE = "log/log.txt"
+BACKUP_PATH = "backup"
 
 HOSSA_COL = {
     "dark_green" : "#304536",
