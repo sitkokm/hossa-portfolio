@@ -7,11 +7,12 @@ import shutil
 import config
 
 log_file = config.LOG_FILE
-backup_path = config.BACKUP_PATH
 
 wp_folder = config.WP_FOLDER
 plots_folder = config.PLOTS_FOLDER
+backup_folder = config.BACKUP_FOLDER
 
+backup_path = os.path.join(wp_folder, backup_folder)
 output_path = os.path.join(wp_folder, plots_folder)
 
 def log(msg):
