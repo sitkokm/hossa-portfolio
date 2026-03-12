@@ -2,9 +2,10 @@ import os
 import datetime
 import pandas as pd
 
-from src.utils import scrapeDataFromSpreadsheet
+import src.utils as u
 import src.plots as plots
 import src.colors as c
+from src.log_utils import log, weekly_backup
 import config
 
 import traceback
@@ -26,25 +27,17 @@ if not sheetId:
 output_path = os.path.join(wp_folder, plots_folder)
 os.makedirs(output_path, exist_ok=True)
 
-def log(msg):
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    line = f"[{timestamp}] {msg}"
-    with open(log_file, "a") as f:
-        f.write(line + "\n")
-    print(line)
-
-
 def run_update():
     log("=== Starting daily update ===")
 
     try:
         # Scrape data
-        df_tab = scrapeDataFromSpreadsheet(sheetId, gids['tab'])
-        df_stopa = scrapeDataFromSpreadsheet(sheetId, gids['stopa'])
-        df_sums = scrapeDataFromSpreadsheet(sheetId, gids['sums']).iloc[:,1:-1]
-        df_wyceny = scrapeDataFromSpreadsheet(sheetId, gids['wyceny'])
-        df_wig = scrapeDataFromSpreadsheet(sheetId, gids['wig'])
-
+        df_tab = u.scrapeDfFromSpreadsheet(sheetId, gids['tab'])
+        df_stopa = u.scrapeDfFromSpreadsheet(sheetId, gids['stopa'])
+        df_sums = u.scrapeDfFromSpreadsheet(sheetId, gids['sums']).iloc[:,1:-1]
+        df_wyceny = u.scrapeDfFromSpreadsheet(sheetId, gids['wyceny'])
+        df_wig = u.scrapeDfFromSpreadsheet(sheetId, gids['wig'])
+        
         # --- Horizontal bar plot ---
         title = "stopa-zwrotu"
         val_col = "Stopa zwrotu"
@@ -101,6 +94,10 @@ def run_update():
             log(f"Saved new plot: {file_path}")
 
         log("All plots and tables saved successfully.")
+
+        today = datetime.datetime.today()
+        if today.weekday() == 3:   # saturday
+            weekly_backup()
 
     except Exception as e:
         log("ERROR occurred during update!")
