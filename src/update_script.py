@@ -20,6 +20,8 @@ dg = config.HOSSA_COL['dark_green']
 lg = config.HOSSA_COL['light_green']
 dr = config.HOSSA_COL['dark_red']
 
+backup_day = 5
+
 sheetId = os.environ.get("sheetId")
 if not sheetId:
     raise ValueError("Environment variable sheetId not set!")
@@ -34,7 +36,7 @@ def run_update():
         # Scrape data
         df_tab = u.scrapeDfFromSpreadsheet(sheetId, gids['tab'])
         df_stopa = u.scrapeDfFromSpreadsheet(sheetId, gids['stopa'])
-        df_sums = u.scrapeDfFromSpreadsheet(sheetId, gids['sums']).iloc[:,1:-1]
+        df_sums = u.scrapeDfFromSpreadsheetFallback(sheetId, gids['sums']).iloc[:,1:-1]
         df_wyceny = u.scrapeDfFromSpreadsheet(sheetId, gids['wyceny'])
         df_wig = u.scrapeDfFromSpreadsheet(sheetId, gids['wig'])
         
@@ -78,6 +80,9 @@ def run_update():
 
         # --- Tables ---
         df_wyceny = df_wyceny[df_wyceny['DCF'].astype(str).str.strip().ne("")]
+        
+        # print(df_sums)
+        log(df_sums.to_string().encode("ascii", "ignore").decode())
 
         table_files = [
             ("portfolio_tab.html", plots.table2html, df_tab, {"fontsize":14}),
@@ -96,7 +101,7 @@ def run_update():
         log("All plots and tables saved successfully.")
 
         today = datetime.datetime.today()
-        if today.weekday() == 3:   # saturday
+        if today.weekday() == backup_day:
             weekly_backup()
 
     except Exception as e:
