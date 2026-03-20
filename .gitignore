@@ -6,3 +6,5 @@ plots/
 archive/
 log/
 .idea/
+config.py
+*.html

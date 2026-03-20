@@ -20,6 +20,48 @@ def str2float(series: pd.Series) -> pd.Series: # df[col] = str2float(df[col])
         .pipe(pd.to_numeric, errors="coerce")
     )
 
+def scrapeDfFromSpreadsheet(sheetId, gid):
+    url = f"https://docs.google.com/spreadsheets/d/{sheetId}/export?format=csv&gid={gid}"
+    df = pd.read_csv(url)
+    df = df.fillna("")
+    return df
+
+import pandas as pd
+import time
+
+def scrapeDfFromSpreadsheetFallback(sheetId, gid, retries=5, delay=2):
+    """
+    Scraper Google Sheets CSV z retry i fallbackiem na 'Ładuję...'
+    
+    retries – ile prób max
+    delay – ile sekund czekać między próbami
+    """
+
+    base_url = f"https://docs.google.com/spreadsheets/d/{sheetId}/export?format=csv&gid={gid}"
+
+    for attempt in range(1, retries + 1):
+        # cache-buster żeby wymusić świeże dane
+        url = f"{base_url}&t={int(time.time())}"
+
+        df = pd.read_csv(url, keep_default_na=False)
+
+        # sprawdzamy czy gdzieś jest "Ładuję"
+        has_loading = df.astype(str).apply(
+            lambda col: col.str.contains("Ładuję", case=False, na=False)
+        ).any().any()
+
+        if not has_loading:
+            print(f"Scrape OK (attempt {attempt})")
+            return df
+
+        print(f"[attempt {attempt}] Detected 'Laduję...' → retrying in {delay}s...")
+        time.sleep(delay)
+
+    # 🔴 fallback – po wszystkich próbach zwracamy co mamy
+    print("WARNING: Max retries reached → returning data WITH 'Laduję...'")
+
+    return df
+  
 def scrapeDataFromSpreadsheet(sheetId, gid, headers = True) -> pd.DataFrame:
     url = f'https://docs.google.com/spreadsheets/u/0/d/{sheetId}/gviz/tq?tqx=out:html&tq=&gid={gid}'
     html = requests.get(url).text

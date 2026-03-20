@@ -1,4 +1,4 @@
-WP_FOLDER = "/home/srv73139/domains/hossaprocapital.pl/public_html/wp-content/uploads"
+WP_FOLDER = "/home/srv73139/domains/hossaprocapital.pl/public_html/wp-content/plots"
 
 GIDS = {
     "tab": '1931120804',
@@ -8,9 +8,9 @@ GIDS = {
     "wig": '1164349481'
 }
 
-
 PLOTS_FOLDER = "plots"
 LOG_FILE = "log/log.txt"
+BACKUP_FOLDER = "backup"
 
 HOSSA_COL = {
     "dark_green" : "#304536",
