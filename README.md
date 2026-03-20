@@ -14,14 +14,16 @@ This repository generates simple interactive HTML plots and tables for a portfol
 ├── load_env.py          # only for setting up environment variables from .env locally
 ├── testing.ipynb        # optional for development and testing
 ├── app.py               # Flask app with to trigger updates
-├── config.py            # configuration: output folders, sheet GIDs, log file path
+├── config.py            # configuration: output folders, sheet GIDs, log file path, etc.
 ├── passenger_wsgi.py    # only needed in our hosting environment
 ├── src/
 │   ├── update_script.py # main script that scrapes the sheet and generates plots
 │   ├── utils.py         # helper functions: scraping, string → float conversion
+│   ├── log_utils.py     # utils and configuration of logger used in other scripts - ensures consistent formatting and log levels across modules
 │   ├── colors.py        # utils that generates color palettes etc. for plots
 │   └── plots.py         # functions that generate HTML plots/tables
 ├── plots/               # created at runtime - stores generated HTML files
+├── backup/              # created at runtime - stores backup (generated once a week on fridays)
 └── log/
     └── log.txt          # created at runtime - stores logs 
 ```
@@ -51,7 +53,7 @@ This repository generates simple interactive HTML plots and tables for a portfol
    python -m venv .venv
    ```
 2. ``` 
-   .venv\Scripts\activate
+   source .venv\Scripts\activate
    ```
 3. ```
    pip install -r requirements.txt
@@ -111,6 +113,7 @@ Then open http://127.0.0.1:5000/ in your browser; you should see "Plots updated 
 ## Jupyter notebook (test.ipynb)
 
 - The notebook demonstrates how plots are generated step-by-step, so you can dig more into the code
+- It wasn't updated for a long time, will need some path and name changes before use.
 - To run it you will need a JupyterLab environment. 
 - Set up kernel:
     ```
@@ -124,7 +127,9 @@ Then open http://127.0.0.1:5000/ in your browser; you should see "Plots updated 
 
 ## Where outputs go
 
-- Plots (interactive HTML) are saved to: the folder defined in config.py -> plots_folder (default "plots").
+- Plots (interactive HTML) are saved to: the folder defined in config.py -> WP_FOLDER/PLOTS_FOLDER (change default before use).
 
 - Logs: config.py -> log_file (default "log/log.txt").
+
+- Backup: config.py -> BACKUP_FOLDER (default "backup").
 
